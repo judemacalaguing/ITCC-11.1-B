@@ -1,0 +1,177 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Movie {
+    String title;
+    String genre;
+    int year;
+
+    Movie(String title, String genre, int year) {
+        this.title = title;
+        this.genre = genre;
+        this.year = year;
+    }
+
+    public String toString() {
+        return title + " (" + year + ") - Genre: " + genre;
+    }
+}
+
+class TVShow {
+    String title;
+    String genre;
+    int seasons;
+
+    TVShow(String title, String genre, int seasons) {
+        this.title = title;
+        this.genre = genre;
+        this.seasons = seasons;
+    }
+
+    public String toString() {
+        return title + " - " + seasons + " Seasons - Genre: " + genre;
+    }
+}
+
+class NetflixApp {
+    private ArrayList<Movie> movieLibrary = new ArrayList<>();
+    private ArrayList<TVShow> tvShowLibrary = new ArrayList<>();
+    private ArrayList<Object> watchlist = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
+
+    public NetflixApp() {
+        // Adding some sample movies and TV shows to the libraries
+        movieLibrary.add(new Movie("The Matrix", "Sci-Fi", 1999));
+        movieLibrary.add(new Movie("The Godfather", "Crime", 1972));
+
+        tvShowLibrary.add(new TVShow("Breaking Bad", "Crime", 5));
+        tvShowLibrary.add(new TVShow("Stranger Things", "Horror", 4));
+    }
+
+    public void displayMenu() {
+        System.out.println("\nWelcome to Netflix CLI!");
+        System.out.println("1. List Movies");
+        System.out.println("2. List TV Shows");
+        System.out.println("3. Add to Watchlist");
+        System.out.println("4. View Watchlist");
+        System.out.println("5. Remove from Watchlist");
+        System.out.println("6. Exit");
+    }
+
+    public void listMovies() {
+        System.out.println("\n--- Movie Library ---");
+        for (int i = 0; i < movieLibrary.size(); i++) {
+            System.out.println((i + 1) + ". " + movieLibrary.get(i));
+        }
+    }
+
+    public void listTVShows() {
+        System.out.println("\n--- TV Show Library ---");
+        for (int i = 0; i < tvShowLibrary.size(); i++) {
+            System.out.println((i + 1) + ". " + tvShowLibrary.get(i));
+        }
+    }
+
+    public void addToWatchlist() {
+        System.out.print("\nEnter the type of content to add (1 for Movie, 2 for TV Show): ");
+        int type = scanner.nextInt();
+        scanner.nextLine();  // Consume the newline character
+
+        if (type == 1) {
+            listMovies();
+            System.out.print("\nEnter the number of the movie you want to add to watchlist: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice > 0 && choice <= movieLibrary.size()) {
+                watchlist.add(movieLibrary.get(choice - 1));
+                System.out.println("Added to watchlist!");
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        } else if (type == 2) {
+            listTVShows();
+            System.out.print("\nEnter the number of the TV show you want to add to watchlist: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice > 0 && choice <= tvShowLibrary.size()) {
+                watchlist.add(tvShowLibrary.get(choice - 1));
+                System.out.println("Added to watchlist!");
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        } else {
+            System.out.println("Invalid option!");
+        }
+    }
+
+    public void viewWatchlist() {
+        System.out.println("\n--- Your Watchlist ---");
+        if (watchlist.isEmpty()) {
+            System.out.println("Your watchlist is empty.");
+        } else {
+            for (int i = 0; i < watchlist.size(); i++) {
+                System.out.println((i + 1) + ". " + watchlist.get(i));
+            }
+        }
+    }
+
+    public void removeFromWatchlist() {
+        if (watchlist.isEmpty()) {
+            System.out.println("Your watchlist is empty.");
+            return;
+        }
+
+        viewWatchlist();
+        System.out.print("\nEnter the number of the item to remove from watchlist: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice > 0 && choice <= watchlist.size()) {
+            watchlist.remove(choice - 1);
+            System.out.println("Removed from watchlist.");
+        } else {
+            System.out.println("Invalid choice.");
+        }
+    }
+
+    public void run() {
+        boolean running = true;
+        while (running) {
+            displayMenu();
+            System.out.print("\nEnter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            switch (choice) {
+                case 1:
+                    listMovies();
+                    break;
+                case 2:
+                    listTVShows();
+                    break;
+                case 3:
+                    addToWatchlist();
+                    break;
+                case 4:
+                    viewWatchlist();
+                    break;
+                case 5:
+                    removeFromWatchlist();
+                    break;
+                case 6:
+                    System.out.println("Exiting program. Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice, please try again.");
+            }
+        }
+    }
+}
+
+public class NetflixCLI {
+    public static void main(String[] args) {
+        NetflixApp app = new NetflixApp();
+        app.run();
+    }
+}
